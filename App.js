@@ -187,10 +187,10 @@ export default function App() {
                 <View style={{ width: progress + '%', height: 100 + '%', backgroundColor: '#03acef' }}></View>
               </View>
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 5, }}>
-              <Image source={require('./settings.png')} style={{ width: 20, height: 20, marginLeft: 6 }} />
-              <Image source={require('./expand.png')} style={{ width: 15, height: 15, marginLeft: 6 }} />
-              <Image source={require('./vSmall.png')} style={{ width: 20, height: 26, marginLeft: 6, marginTop: -5 }} resizeMode={"stretch"} />
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 5, width: Dimensions.get('screen').width - 130 - (Dimensions.get('screen').width * trackBarWidth / 100), justifyContent: 'space-evenly' }}>
+              <Image source={require('./settings.png')} style={{ width: 20, height: 20, }} />
+              <Image source={require('./expand.png')} style={{ width: 15, height: 15, }} />
+              <Image source={require('./vSmall.png')} style={{ width: 20, height: 26, marginTop: -5 }} resizeMode={"stretch"} />
 
             </View>
           </View >
