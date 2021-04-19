@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useReducer, useRef, useState } from 'react';
-import { StyleSheet, Text, Touchable, TouchableOpacity, View, Button, TouchableWithoutFeedback, Dimensions } from 'react-native';
+import { StyleSheet, Text, Touchable, TouchableOpacity, View, Button, TouchableWithoutFeedback, Dimensions, Image } from 'react-native';
 import { Video, Audio, AVPlaybackStatus } from 'expo-av';
 import { SliderPicker } from 'react-native-slider-picker';
 const controlColor = "#222222d4";
@@ -15,7 +15,7 @@ export default function App() {
   const [progress, setProgress] = useState(0);
   const [controllerShow, setControllerShow] = useState(true)
   const videoUrl = "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4"
-  const trackBarWidth = 50;
+  const trackBarWidth = 45;
 
 
   useEffect(() => {
@@ -187,7 +187,12 @@ export default function App() {
                 <View style={{ width: progress + '%', height: 100 + '%', backgroundColor: '#03acef' }}></View>
               </View>
             </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 5, }}>
+              <Image source={require('./settings.png')} style={{ width: 20, height: 20, marginLeft: 6 }} />
+              <Image source={require('./expand.png')} style={{ width: 15, height: 15, marginLeft: 6 }} />
+              <Image source={require('./vSmall.png')} style={{ width: 20, height: 26, marginLeft: 6, marginTop: -5 }} resizeMode={"stretch"} />
 
+            </View>
           </View >
 
 
