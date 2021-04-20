@@ -22,7 +22,7 @@ export default function App() {
   const [progress, setProgress] = useState(0);
   const [controllerShow, setControllerShow] = useState(true)
   const [showSettingsPanel, setShowSettingsPanel] = useState(false)
-  const videoUrl = "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4"
+  const videoUrl = "https://vod-progressive.akamaized.net/exp=1618958186~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F2038%2F21%2F535192869%2F2530146274.mp4~hmac=81515334f5d1b76da38e0c7abbb8e652717d6fcd2cd17096af2deb12cf1bd6f0/vimeo-prod-skyfire-std-us/01/2038/21/535192869/2530146274.mp4"
   const trackBarWidth = 45;
 
 
@@ -98,9 +98,12 @@ export default function App() {
     let progress = 0;
     if (playableDuration)
       progress = (position * 100 / playableDuration).toFixed()
-    else
-      progress = 100;
-    setProgress(progress)
+    // else
+    // progress = 100;
+
+    console.log(progress)
+    if (progress != 0)
+      setProgress(progress)
 
   }
 
@@ -136,6 +139,7 @@ export default function App() {
 
 
   const goToPosition = async (percent, position, videoDuration, _sound = sound) => {
+
     await video.current.setPositionAsync(position);
     video.current.playAsync()
     playSound(position, _sound);
@@ -224,7 +228,7 @@ export default function App() {
               skip(false)
             }}
             delay={200}
-          ><View onPress={() => alert('asd')} style={{ width: 100 + '%', height: 100 + '%', justifyContent: 'center', alignItems: 'center', paddingRight: 30 + '%', opacity: leftBackwardShow ? 1 : 0 }}>
+          ><View style={{ width: 100 + '%', height: 100 + '%', justifyContent: 'center', alignItems: 'center', paddingRight: 30 + '%', opacity: leftBackwardShow ? 1 : 0 }}>
               <FontAwesome name="backward" size={50} color="#fff" />
             </View>
           </DoubleClick>
