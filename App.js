@@ -68,7 +68,6 @@ export default function App() {
   }
 
   const changeSpeed = (val) => {
-    console.log(speedItems[val].value)
     // video.current.setRateAsync(speedItems[val].value, true)
     sound.setRateAsync(speedItems[val].value, true, Audio.PitchCorrectionQuality.High)
   }
@@ -101,7 +100,6 @@ export default function App() {
     // else
     // progress = 100;
 
-    console.log(progress)
     if (progress != 0)
       setProgress(progress)
 
@@ -126,7 +124,6 @@ export default function App() {
 
 
   const loadAudio = async () => {
-    console.log('Loading Sound');
     const { sound } = await Audio.Sound.createAsync(
       { uri: videoUrl }
     );
@@ -281,14 +278,16 @@ export default function App() {
         {showSettingsPanel && <View style={styles.settingsModal}>
           <View style={styles.quality}>
             <Text style={{ color: '#FFF', fontWeight: 'bold', margin: 10 }}>Quality</Text>
-            <HorizontalPicker
-              data={qualityItems}
-              renderItem={renderQualityItems}
-              itemWidth={120}
-              defaultIndex={1}
-              onChange={(val) => { loadVideoResolution(val) }}
-              snapTimeout={20}
-            />
+            <TouchableOpacity>
+              <HorizontalPicker
+                data={qualityItems}
+                renderItem={renderQualityItems}
+                itemWidth={120}
+                defaultIndex={1}
+                onChange={(val) => { loadVideoResolution(val) }}
+                snapTimeout={20}
+              />
+            </TouchableOpacity>
             <View style={{ width: 11, height: 11, borderRadius: 11 / 2, backgroundColor: 'rgb(15, 174, 241)', alignSelf: 'center', marginBottom: 10 }}>
             </View>
           </View>
@@ -440,6 +439,7 @@ const styles = StyleSheet.create({
     width: 80, height: 55, backgroundColor: controlColor, marginRight: 10, borderRadius: 10
   },
   settingsModal: {
+    zIndex: 100,
     width: 90 + '%',
     height: 170,
     justifyContent: 'space-between',
