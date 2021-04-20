@@ -139,11 +139,12 @@ export default function App() {
 
 
   const goToPosition = async (percent, position, videoDuration, _sound = sound) => {
-
+    setProgress(percent)
     await video.current.setPositionAsync(position);
-    video.current.playAsync()
     playSound(position, _sound);
-    // trackerBarHandler(position, videoDuration);
+    video.current.playAsync()
+
+    // // trackerBarHandler(position, videoDuration);
 
   }
   const playButtonHandler = () => {
