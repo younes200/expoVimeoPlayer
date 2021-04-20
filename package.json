@@ -10,6 +10,7 @@
   "dependencies": {
     "@miblanchard/react-native-slider": "^1.5.0",
     "@react-native-community/slider": "3.0.3",
+    "@vseslav/react-native-horizontal-picker": "^0.1.0",
     "expo": "~41.0.0",
     "expo-av": "~9.1.2",
     "expo-status-bar": "~1.0.4",

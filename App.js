@@ -1,10 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useReducer, useRef, useState } from 'react';
-import { StyleSheet, Text, Touchable, TouchableOpacity, View, Button, TouchableWithoutFeedback, Dimensions, Image } from 'react-native';
+import { StyleSheet, Text, Touchable, TouchableOpacity, View, Button, TouchableWithoutFeedback, Dimensions, Image, ScrollView } from 'react-native';
 import { Video, Audio, AVPlaybackStatus } from 'expo-av';
 import { SliderPicker } from 'react-native-slider-picker';
 const controlColor = "#222222d4";
 import { Entypo } from '@expo/vector-icons';
+import HorizontalPicker from '@vseslav/react-native-horizontal-picker';
 
 export default function App() {
   const video = useRef(null)
@@ -15,9 +16,57 @@ export default function App() {
   const [videoPlayStatus, setVideoPlayStatus] = useState(false);
   const [progress, setProgress] = useState(0);
   const [controllerShow, setControllerShow] = useState(true)
+  const [showSettingsPanel, setShowSettingsPanel] = useState(false)
   const videoUrl = "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4"
   const trackBarWidth = 45;
 
+
+
+
+  const qualityItems = [
+    { 0: "1080p", value: 1080 },
+    { 1: "720p", value: 720 },
+    { 2: "480p", value: 480 },
+    { 3: "360p", value: 360 },
+    { 4: "240p", value: 240 },
+  ];
+
+  const speedItems = [
+    { 0: "0.50x", value: 0.50 },
+    { 1: "0.75x", value: 0.75 },
+    { 2: "Normal", value: 1 },
+    { 3: "1.25x", value: 1.25 },
+    { 4: "1.50x", value: 1.50 },
+    { 5: "2x", value: 2 },
+  ];
+
+
+  const renderQualityItems = (item, index) => (
+    <View style={{ width: 120, alignItems: 'center', justifyContent: 'center' }}>
+      <Text style={styles.itemText}>
+        {item[index]}
+      </Text>
+    </View>
+  );
+
+  const renderSpeedItems = (item, index) => (
+    <View style={{ width: 120, alignItems: 'center', justifyContent: 'center' }}>
+      <Text style={styles.itemText}>
+        {item[index]}
+      </Text>
+    </View>
+  );
+
+
+  const loadVideoResolution = (val) => {
+    console.log(qualityItems[val])
+  }
+
+  const changeSpeed = (val) => {
+    console.log(speedItems[val].value)
+    // video.current.setRateAsync(speedItems[val].value, true)
+    sound.setRateAsync(speedItems[val].value, true, Audio.PitchCorrectionQuality.High)
+  }
 
   useEffect(() => {
     if (videoPlayStatus) {
@@ -38,10 +87,7 @@ export default function App() {
     // console.log('Playing Sound');
     await sound.pauseAsync();
   }
-  const CustomThumb = () => (
-    <View style={componentThumbStyles.container}>
-    </View>
-  );
+
 
   const trackerBarHandler = (position, playableDuration) => {
     let progress = 0;
@@ -111,7 +157,7 @@ export default function App() {
 
 
   const controlShowHandler = () => {
-
+    setShowSettingsPanel(false)
     setControllerShow(prev => !prev);
 
 
@@ -137,6 +183,12 @@ export default function App() {
     video.current.setPositionAsync(newPos);
   }
 
+  const settingsModalHandler = () => {
+
+    setControllerShow(false)
+    setShowSettingsPanel(prev => !prev)
+
+  }
 
 
   return (
@@ -149,6 +201,7 @@ export default function App() {
             onLoad={(log) => { setVideoDuration(log.durationMillis) }}
             ref={video}
             style={{ width: Dimensions.get('screen').width, height: 300 }}
+            resizeMode={"cover"}
             source={{
               uri: videoUrl,
             }}
@@ -163,7 +216,35 @@ export default function App() {
           />
         </TouchableWithoutFeedback>
 
-        <View style={[styles.controlContainer, { opacity: controllerShow ? 1 : 0, bottom: controllerShow ? 50 : -100, zIndex: controllerShow ? 1 : -9 }]}>
+        {showSettingsPanel && <View style={styles.settingsModal}>
+          <View style={styles.quality}>
+            <Text style={{ color: '#FFF', fontWeight: 'bold', margin: 10 }}>Quality</Text>
+            <HorizontalPicker
+              data={qualityItems}
+              renderItem={renderQualityItems}
+              itemWidth={120}
+              defaultIndex={1}
+              onChange={(val) => { loadVideoResolution(val) }}
+              snapTimeout={20}
+            />
+            <View style={{ width: 11, height: 11, borderRadius: 11 / 2, backgroundColor: 'rgb(15, 174, 241)', alignSelf: 'center', marginBottom: 10 }}></View>
+          </View>
+
+          <View style={styles.quality}>
+            <Text style={{ color: '#FFF', fontWeight: 'bold', margin: 10 }}>Speed</Text>
+            <HorizontalPicker
+              data={speedItems}
+              renderItem={renderSpeedItems}
+              defaultIndex={2}
+              itemWidth={120}
+              onChange={(val) => { changeSpeed(val) }}
+              snapTimeout={20}
+            />
+            <View style={{ width: 11, height: 11, borderRadius: 11 / 2, backgroundColor: 'rgb(15, 174, 241)', alignSelf: 'center', marginBottom: 10 }}></View>
+          </View>
+        </View>}
+
+        <View style={[styles.controlContainer, { opacity: controllerShow ? 1 : 0, bottom: controllerShow ? 10 : -100, zIndex: controllerShow ? 1 : -9 }]}>
 
           <TouchableOpacity style={styles.playButton} onPress={() => playButtonHandler()}>
             <Entypo name={`controller-${!videoPlayStatus ? 'play' : 'paus'}`} size={43} color="#FFF" />
@@ -205,7 +286,11 @@ export default function App() {
                 paddingHorizontal: 4
               }}>
 
-                <View style={{ position: 'absolute', backgroundColor: '#FFF', bottom: -2, width: 10, height: 10, transform: [{ rotate: '95(deg)' }] }}></View>
+                <View style={{
+                  position: 'absolute', backgroundColor: '#FFF', bottom: -2, width: 10, height: 10,
+                  transform: [{ rotate: '495deg' }]
+
+                }}></View>
                 <Text style={{ fontSize: 12 }}>{getVideoTime()}</Text>
               </View>
               <View style={{
@@ -222,7 +307,7 @@ export default function App() {
 
 
             <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 5, width: Dimensions.get('screen').width - 130 - (Dimensions.get('screen').width * trackBarWidth / 100), justifyContent: 'space-between' }}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={settingsModalHandler}>
                 <Image source={require('./settings.png')} style={{ width: 20, height: 20, }} />
               </TouchableOpacity>
               <TouchableOpacity>
@@ -281,14 +366,30 @@ const styles = StyleSheet.create({
   },
   controlContainer: {
     position: 'absolute',
-    bottom: 50,
+    bottom: 0,
     width: 95 + '%',
     flexDirection: 'row',
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
   },
   playButton: {
     justifyContent: 'center',
     alignItems: 'center',
     width: 80, height: 55, backgroundColor: controlColor, marginRight: 10, borderRadius: 10
+  },
+  settingsModal: {
+    width: 90 + '%',
+    height: 170,
+    justifyContent: 'space-between',
+    position: 'absolute',
+    marginBottom: 20
+  },
+  quality: {
+    backgroundColor: controlColor,
+    width: 100 + '%',
+    height: 49 + '%'
+  },
+  itemText: {
+    color: '#FFF',
+    fontWeight: 'bold'
   }
 });
