@@ -6,7 +6,8 @@ import { SliderPicker } from 'react-native-slider-picker';
 const controlColor = "#222222d4";
 import { Entypo } from '@expo/vector-icons';
 import HorizontalPicker from '@vseslav/react-native-horizontal-picker';
-
+import DoubleClick from 'react-native-double-tap';
+import { MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons';
 export default function App() {
   const video = useRef(null)
   const [videoSpeed, setVideoSpeed] = useState(1.0)
@@ -14,6 +15,10 @@ export default function App() {
   const [currentVideoPosition, setCurrentVideoStatus] = useState(0);
   const [sound, setSound] = React.useState();
   const [videoPlayStatus, setVideoPlayStatus] = useState(false);
+  const [leftBackwardShow, setLeftBackwardShow] = useState(false);
+  const [rightForwardShow, setRightForwardShow] = useState(false);
+
+
   const [progress, setProgress] = useState(0);
   const [controllerShow, setControllerShow] = useState(true)
   const [showSettingsPanel, setShowSettingsPanel] = useState(false)
@@ -130,10 +135,10 @@ export default function App() {
   }, [])
 
 
-  const goToPosition = async (percent, position, videoDuration, sound) => {
+  const goToPosition = async (percent, position, videoDuration, _sound = sound) => {
     await video.current.setPositionAsync(position);
     video.current.playAsync()
-    playSound(position, sound);
+    playSound(position, _sound);
     // trackerBarHandler(position, videoDuration);
 
   }
@@ -176,11 +181,20 @@ export default function App() {
 
   async function skip(bool) {
     const status = await video.current.getStatusAsync();
-    const tenSeconds = 10000;
+    const tenSeconds = 5000;
     const curPos = status.positionMillis;
     const newPos = bool ? curPos + tenSeconds : curPos - tenSeconds;
-    setPosition(newPos);
-    video.current.setPositionAsync(newPos);
+    goToPosition(null, newPos, null)
+
+    if (bool) {
+      setRightForwardShow(true);
+      setTimeout(() => setRightForwardShow(false), 1000)
+    }
+    else {
+
+      setLeftBackwardShow(true);
+      setTimeout(() => setLeftBackwardShow(false), 1000)
+    }
   }
 
   const settingsModalHandler = () => {
@@ -196,25 +210,68 @@ export default function App() {
 
       <StatusBar style="auto" />
       <View style={styles.videContainer}>
-        <TouchableWithoutFeedback onPress={() => controlShowHandler()}>
-          <Video
-            onLoad={(log) => { setVideoDuration(log.durationMillis) }}
-            ref={video}
-            style={{ width: Dimensions.get('screen').width, height: 300 }}
-            resizeMode={"cover"}
-            source={{
-              uri: videoUrl,
+
+
+
+
+        <View style={{ width: 50 + '%', height: 100 + '%', position: 'absolute', top: 0, zIndex: 1, left: 0 }}>
+
+          <DoubleClick
+            singleTap={() => {
+              controlShowHandler();
             }}
-            rate={videoSpeed}
-            shouldPlay={false}
-            volume={1.0}
-            isMuted={true}
-            useNativeControls={false}
-            ref={video}
-            // isLooping
-            onPlaybackStatusUpdate={videoStatusHandler}
-          />
-        </TouchableWithoutFeedback>
+            doubleTap={() => {
+              skip(false)
+            }}
+            delay={200}
+          ><View onPress={() => alert('asd')} style={{ width: 100 + '%', height: 100 + '%', justifyContent: 'center', alignItems: 'center', paddingRight: 30 + '%', opacity: leftBackwardShow ? 1 : 0 }}>
+              <FontAwesome name="backward" size={50} color="#fff" />
+            </View>
+          </DoubleClick>
+
+        </View>
+
+
+
+        <View style={{ width: 50 + '%', height: 100 + '%', position: 'absolute', top: 0, zIndex: 1, right: 0 }}>
+
+          <DoubleClick
+            singleTap={() => {
+              controlShowHandler();
+            }}
+            doubleTap={() => {
+              skip(true)
+            }}
+            delay={200}
+          ><View onPress={() => alert('asd')} style={{ width: 100 + '%', height: 100 + '%', justifyContent: 'center', alignItems: 'center', paddingLeft: 30 + '%', opacity: rightForwardShow ? 1 : 0 }}>
+              <FontAwesome name="forward" size={50} color="#fff" />
+            </View>
+          </DoubleClick>
+
+        </View>
+
+
+
+
+        {/* <TouchableWithoutFeedback onPress={() => controlShowHandler()} style={{ backgroundColor: 'red' }}> */}
+        <Video
+          onLoad={(log) => { setVideoDuration(log.durationMillis) }}
+          ref={video}
+          style={{ width: Dimensions.get('screen').width, height: 300 }}
+          resizeMode={"cover"}
+          source={{
+            uri: videoUrl,
+          }}
+          rate={videoSpeed}
+          shouldPlay={false}
+          volume={1.0}
+          isMuted={true}
+          useNativeControls={false}
+          ref={video}
+          // isLooping
+          onPlaybackStatusUpdate={videoStatusHandler}
+        />
+        {/* </TouchableWithoutFeedback> */}
 
         {showSettingsPanel && <View style={styles.settingsModal}>
           <View style={styles.quality}>
@@ -227,7 +284,8 @@ export default function App() {
               onChange={(val) => { loadVideoResolution(val) }}
               snapTimeout={20}
             />
-            <View style={{ width: 11, height: 11, borderRadius: 11 / 2, backgroundColor: 'rgb(15, 174, 241)', alignSelf: 'center', marginBottom: 10 }}></View>
+            <View style={{ width: 11, height: 11, borderRadius: 11 / 2, backgroundColor: 'rgb(15, 174, 241)', alignSelf: 'center', marginBottom: 10 }}>
+            </View>
           </View>
 
           <View style={styles.quality}>

@@ -6464,6 +6464,11 @@ react-native-css-vh-vw@^1.0.4, react-native-css-vh-vw@^1.0.5:
   resolved "https://registry.yarnpkg.com/react-native-css-vh-vw/-/react-native-css-vh-vw-1.0.5.tgz#dfa8e2fde22fa6a36e43101c713f2dcd13a00cad"
   integrity sha512-pY0gIB1xc1xLp3VH6mji7zHfiOc7BpFFCtOTpMeyjfoQ4CacmcCD6vTZuM2ReuK+oXdWrbx7CquTHxl44aHcBA==
 
+react-native-double-tap@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-double-tap/-/react-native-double-tap-1.0.1.tgz#d4235a77e594ca83665fd96049f0bdf8266e4754"
+  integrity sha512-tDhQv9IJnH4a5tPTQVBzvwcDo9+6a1Xz1JiFbqfORk9fkBnopx+1T2ZdTIUAvgxuUgdbwIRWnSzE3IIkmkeKFw==
+
 react-native-gesture-handler@~1.10.2:
   version "1.10.3"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.10.3.tgz#942bbf2963bbf49fa79593600ee9d7b5dab3cfc0"
