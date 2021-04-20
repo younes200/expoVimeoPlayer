@@ -221,10 +221,16 @@ export default function App() {
 
 
 
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 5, width: Dimensions.get('screen').width - 130 - (Dimensions.get('screen').width * trackBarWidth / 100), justifyContent: 'space-evenly' }}>
-              <Image source={require('./settings.png')} style={{ width: 20, height: 20, }} />
-              <Image source={require('./expand.png')} style={{ width: 15, height: 15, }} />
-              <Image source={require('./vSmall.png')} style={{ width: 20, height: 26, marginTop: -5 }} resizeMode={"stretch"} />
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 5, width: Dimensions.get('screen').width - 130 - (Dimensions.get('screen').width * trackBarWidth / 100), justifyContent: 'space-between' }}>
+              <TouchableOpacity>
+                <Image source={require('./settings.png')} style={{ width: 20, height: 20, }} />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Image source={require('./expand.png')} style={{ width: 15, height: 15, }} />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Image source={require('./vSmall.png')} style={{ width: 20, height: 26, marginTop: -5, marginRight: 5 }} resizeMode={"stretch"} />
+              </TouchableOpacity>
 
             </View>
           </View >
@@ -283,6 +289,6 @@ const styles = StyleSheet.create({
   playButton: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 80, height: 60, backgroundColor: controlColor, marginRight: 10, borderRadius: 10
+    width: 80, height: 55, backgroundColor: controlColor, marginRight: 10, borderRadius: 10
   }
 });
