@@ -76,13 +76,13 @@ export class SliderPicker extends Component {
       backgroundColor: '#f1f4f5',
       borderBottomColor: "#889cb2",
       borderBottomWidth: vh(1) / 3,
-      marginHorizontal: vw(5),
-      marginVertical: vh(2),
-      padding: vw(4),
+      // marginHorizontal: vw(5),
+      // marginVertical: vh(2),
+      // padding: vw(4),
       borderTopLeftRadius: 10,
       borderTopRightRadius: 10,
       ...Platform.isPad ? ({
-        marginTop: vh(4)
+        marginTop: 0
       }) : null
     }
 
@@ -92,11 +92,11 @@ export class SliderPicker extends Component {
       fontSize: Math.ceil(vw(3) * 1.3),
       ...Platform.select({
         ios: {
-          marginTop: vw(2)
+          marginTop: 0
         },
         android: {
           paddingBottom: 0,
-          paddingTop: 5
+          paddingTop: 0
         }
       })
     }
@@ -250,7 +250,7 @@ export class SliderPicker extends Component {
 
     // Add some bottom margin if number scale is not being shown
     if (!this.showNumberScale) {
-      wrapperStyles['marginBottom'] = vh(2);
+      // wrapperStyles['marginBottom'] = vh(2);
     }
 
     // If screen reader is enabled and convert to number input prop is true, return numeric TextInput
@@ -400,7 +400,7 @@ export class SliderPicker extends Component {
     // If handleLabelCheck() returns true, 
     // add extra bottom padding to labelsContainerStyles to account for elements lack of height.
     if (this.handleLabelCheck()) {
-      this.labelsContainerStyles['paddingBottom'] = vh(5);
+      // this.labelsContainerStyles['paddingBottom'] = vh(5);
     }
 
     // Set width according to props.widthPercentage + 1
@@ -507,10 +507,13 @@ export class SliderPicker extends Component {
    * @return {Function} Executes props.callback and state updaters for both currentValue and triggerNonDraggablePress.
    */
   handleChildRelease = (value) => {
+
+    const findPosition = value * this.props.videoDuration / 100;
+
     this.setState({
       currentValue: value,
       triggerNonDraggablePress: false
-    }, () => this.callback(value));
+    }, () => this.callback(value, findPosition, this.props.videoDuration, this.props.sound))
   }
 
   /** 
@@ -625,7 +628,7 @@ export class SliderPicker extends Component {
     // If no separators are being displayed,
     if (!this.showSeparatorScale) {
       // Add some top margin to account for spacing
-      numberContainerStyles['marginTop'] = this.scaleNumberFontSize * .75;
+      // numberContainerStyles['marginTop'] = this.scaleNumberFontSize * .75;
     }
 
     return (
@@ -655,7 +658,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignSelf: 'center',
-    paddingBottom: vw(6) // For when there is at least one label passed (this will be changed to vh(5) if no labels passed)
+    // paddingBottom: vw(6) // For when there is at least one label passed (this will be changed to vh(5) if no labels passed)
   },
   //
   // Label text (Text component)
@@ -707,7 +710,7 @@ const styles = StyleSheet.create({
   numberContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: vh(2),
+    // marginBottom: vh(2),
     ...Platform.select({
       ios: {
         zIndex: 10
@@ -739,13 +742,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#f1f4f5',
     borderBottomColor: "#889cb2",
     borderBottomWidth: vh(1) / 3,
-    marginHorizontal: vw(5),
-    marginVertical: vh(2),
-    padding: vw(4),
+    // marginHorizontal: vw(5),
+    // marginVertical: vh(2),
+    // padding: vw(4),
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     ...Platform.isPad ? ({
-      marginTop: vh(4)
+      marginTop: 0
     }) : null
   },
   //
@@ -757,13 +760,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#f1f4f5',
     borderBottomColor: 'green',
     borderBottomWidth: vh(1) / 3,
-    marginHorizontal: vw(5),
-    marginVertical: vh(2),
-    padding: vw(4),
+    // marginHorizontal: vw(5),
+    // marginVertical: vh(2),
+    // padding: vw(4),
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     ...Platform.isPad ? ({
-      marginTop: vh(4)
+      marginTop: 0
     }) : null
   },
   //
@@ -774,11 +777,11 @@ const styles = StyleSheet.create({
     fontSize: Math.ceil(vw(3) * 1.3),
     ...Platform.select({
       ios: {
-        marginTop: vw(2)
+        marginTop: 0
       },
       android: {
         paddingBottom: 0,
-        paddingTop: 5
+        paddingTop: 0
       }
     }),
   }

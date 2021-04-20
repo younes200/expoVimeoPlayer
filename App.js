@@ -9,7 +9,8 @@ import { Entypo } from '@expo/vector-icons';
 export default function App() {
   const video = useRef(null)
   const [videoSpeed, setVideoSpeed] = useState(1.0)
-  const [videoDuration, setVideoDuration] = useState("")
+  const [videoDuration, setVideoDuration] = useState("");
+  const [currentVideoPosition, setCurrentVideoStatus] = useState(0);
   const [sound, setSound] = React.useState();
   const [videoPlayStatus, setVideoPlayStatus] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -25,7 +26,6 @@ export default function App() {
   }, [videoPlayStatus])
 
   async function playSound(position, _sound = sound) {
-    console.log(_sound)
     // sound.setRateAsync(1.5, true, Audio.PitchCorrectionQuality.High)
     // console.log('Playing Sound');
     _sound.setPositionAsync(position)
@@ -54,6 +54,7 @@ export default function App() {
   }
 
   const videoStatusHandler = (status) => {
+    setCurrentVideoStatus(status.positionMillis)
     trackerBarHandler(status.positionMillis, status.playableDurationMillis)
     const isPlaying = status.isPlaying
     // console.log(status)
@@ -118,6 +119,25 @@ export default function App() {
     // setTimeout(() => { if (videoPlayStatus) { setControllerShow(false) } }, 2000)
 
   }
+  const getVideoTime = () => {
+    var minutes = Math.floor(currentVideoPosition / 60000);
+    var seconds = ((currentVideoPosition % 60000) / 1000).toFixed(0);
+    var hours = (currentVideoPosition / (1000 * 60 * 60)).toFixed(0);
+    //ES6 interpolated literals/template literals 
+    //If seconds is less than 10 put a zero in front.
+    return `${(hours > 0 ? hours + ':' : "")}${minutes}:${(seconds < 10 ? "0" : "")}${seconds}`;
+  }
+
+  async function skip(bool) {
+    const status = await video.current.getStatusAsync();
+    const tenSeconds = 10000;
+    const curPos = status.positionMillis;
+    const newPos = bool ? curPos + tenSeconds : curPos - tenSeconds;
+    setPosition(newPos);
+    video.current.setPositionAsync(newPos);
+  }
+
+
 
   return (
     <View style={styles.container}>
@@ -179,14 +199,28 @@ export default function App() {
                 widthPercentage={trackBarWidth}
               />
               <View style={{
+                position: 'absolute', top: -25, backgroundColor: '#fff', minWidth: 35, height: 18, justifyContent: 'center',
+                left: progress - 10 + '%',
+                alignItems: 'center',
+                paddingHorizontal: 4
+              }}>
+
+                <View style={{ position: 'absolute', backgroundColor: '#FFF', bottom: -2, width: 10, height: 10, transform: [{ rotate: '95(deg)' }] }}></View>
+                <Text style={{ fontSize: 12 }}>{getVideoTime()}</Text>
+              </View>
+              <View style={{
                 zIndex: -1,
                 height: 15,
                 width: Dimensions.get('screen').width * trackBarWidth / 100,
                 position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center',
               }}>
+
                 <View style={{ width: progress + '%', height: 100 + '%', backgroundColor: '#03acef' }}></View>
               </View>
             </View>
+
+
+
             <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 5, width: Dimensions.get('screen').width - 130 - (Dimensions.get('screen').width * trackBarWidth / 100), justifyContent: 'space-evenly' }}>
               <Image source={require('./settings.png')} style={{ width: 20, height: 20, }} />
               <Image source={require('./expand.png')} style={{ width: 15, height: 15, }} />
